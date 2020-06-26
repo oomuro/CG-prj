@@ -1,0 +1,29 @@
+#version 400 core
+
+uniform mat4 matrix;
+uniform vec4 vtxColor;
+uniform vec3 lightPos;
+uniform vec4 lightColor;
+uniform vec3 camPos;
+
+in vec3 vtxPosition;
+in vec3 inNormal;
+
+out vec3 oVtx;
+out vec4 fragColor;
+out mat4 oMat;
+out vec3 oLightPos;
+out vec4 oLightColor;
+out vec3 oCamPos;
+out vec3 oNormal;
+
+void main() {
+    gl_Position = matrix * vec4(vtxPosition, 1.0);
+    oVtx = vtxPosition;
+    oMat = matrix;
+    oLightPos = lightPos;
+    oLightColor = lightColor;
+    oCamPos = camPos;
+    oNormal = inNormal;
+    fragColor = vtxColor;
+}

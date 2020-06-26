@@ -1,0 +1,24 @@
+#version 400 core
+
+uniform mat4 matrix;
+uniform vec4 vtxColor;
+uniform vec3 lightPos;
+uniform vec4 lightColor;
+uniform vec3 camPos;
+
+in vec3 vtxPosition;
+in vec3 inNormal;
+
+out vec4 fragColor;
+
+void main() {
+    vec4 vPos = vec4(vtxPosition, 1.0);
+    vec3 lightDir = normalize(lightPos - vPos.xyz);
+    vec4 transNorm = matrix * vec4(inNormal, 0.0);
+    vec3 tNorm = normalize(transNorm.xyz);
+    vec3 reflectedLight = -reflect(lightDir, tNorm);
+
+    gl_Position = matrix * vPos;
+
+    fragColor = (dot(lightDir, tNorm.xyz) + pow(max(dot(reflectedLight, -(camPos - vPos.xyz)), 0.0), 10) + max(dot(tNorm, lightDir), 0.0)) * vtxColor;
+}

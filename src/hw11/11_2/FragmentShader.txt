@@ -1,0 +1,20 @@
+#version 400 core
+
+in vec4 fragColor;
+in vec3 oVtx;
+in mat4 oMat;
+in vec3 oLightPos;
+in vec4 oLightColor;
+in vec3 oCamPos;
+in vec3 oNormal;
+
+out vec4 color;
+
+void main() {
+    vec4 vPos = vec4(oVtx, 1.0);
+    vec3 lightDir = normalize(oLightPos - vPos.xyz);
+    vec4 transNorm = oMat * vec4(oNormal, 0.0);
+    vec3 tNorm = normalize(transNorm.xyz);
+    vec3 reflectedLight = -reflect(lightDir, tNorm);
+    color = (dot(lightDir, tNorm.xyz) + pow(max(dot(reflectedLight, -(oCamPos - vPos.xyz)), 0.0), 10) + max(dot(tNorm, lightDir), 0.0)) * fragColor;
+}
